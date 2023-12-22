@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Мессенджер для всех</title>
+    <style>
+      #message-container {
+        height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+
+      #message-input {
+        width: 300px;
+        padding: 5px;
+      }
+
+      #send-button {
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message-container"></div>
+    <input type="text" id="message-input" placeholder="Введите сообщение">
+    <button id="send-button">Отправить</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const messageContainer = document.getElementById("message-container");
+      const messageInput = document.getElementById("message-input");
+      const sendButton = document.getElementById("send-button");
+
+      sendButton.addEventListener("click", function () {
+        const messageText = messageInput.value;
+        socket.emit("chat message", messageText);
+        messageInput.value = "";
+      });
+
+      socket.on("chat message", function (msg) {
+        const messageElement = document.createElement("div");
+        messageElement.textContent = msg;
+        messageContainer.appendChild(messageElement);
+      });
+    </script>
+  </body>
+</html>
